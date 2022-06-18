@@ -3,10 +3,17 @@ import requests
 import json
 import os
 from urllib.parse import urlparse
+from os.path import exists
 
 #Based on https://github.com/GuidoBR/skoober
 
 BASE_URL = "https://www.skoob.com.br"
+COVERS_FOLDER = "covers/"
+
+def get_fname_url(url):
+    pfilename = urlparse(url)
+    bfilename=os.path.basename(pfilename.path)
+    return bfilename
 
 def get_books(user_id):
     api = "{}/{}/{}".format(BASE_URL, "v1/bookcase/books", user_id)
@@ -27,17 +34,17 @@ def save_html(data, filename="skoob.html"):
     html.write('<html><table border=1><tr>')
     for item in header:
         html.write('<th>{}</th>'.format(item))
-    html.write('</tr>')
+    html.write('</tr>\n')
     for line in data:
         html.write('<tr>')
         count=0
         for item in line:
             if count == 8:
-                html.write('<td><img src={}></td>'.format(item))
+                html.write('<td><img src={}></td>'.format(COVERS_FOLDER+get_fname_url(item)))
             else:
                 html.write('<td>{}</td>'.format(item))
             count=count+1
-        html.write('</tr>')
+        html.write('</tr>\n')
     html.write('</table></html>')
     html.close()
 
@@ -51,11 +58,10 @@ def export_data(data):
 
 def retrieve_covers(all_books):
     for book in all_books:
-        img_data = requests.get(book[8]).content
-        pfilename = urlparse(book[8])
-        bfilename=os.path.basename(pfilename.path)
-        with open('covers/'+bfilename, 'wb') as handler:
-            handler.write(img_data)
+        if not exists(COVERS_FOLDER+get_fname_url(book[8])):
+            img_data = requests.get(book[8]).content
+            with open(COVERS_FOLDER+get_fname_url(book[8]), 'wb') as handler:
+                handler.write(img_data)
 
 def main(user_id):
     json_books = (get_books(user_id))
