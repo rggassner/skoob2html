@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import requests
 import json
+import os
+from urllib.parse import urlparse
 
 #Based on https://github.com/GuidoBR/skoober
 
@@ -45,13 +47,21 @@ def export_data(data):
         b = book['edicao']
         goodread_book = [b['titulo'], book['tipo'], b['autor'], book['ranking'],book['favorito'], b['editora'], book['paginas'], b['ano'], b['capa_grande']]
         books.append(goodread_book)
-
     return books
+
+def retrieve_covers(all_books):
+    for book in all_books:
+        img_data = requests.get(book[8]).content
+        pfilename = urlparse(book[8])
+        bfilename=os.path.basename(pfilename.path)
+        with open('covers/'+bfilename, 'wb') as handler:
+            handler.write(img_data)
 
 def main(user_id):
     json_books = (get_books(user_id))
     all_books = export_data(json_books)
     save_html(all_books)
+    retrieve_covers(all_books)
 
 if __name__ == "__main__":
     import sys
