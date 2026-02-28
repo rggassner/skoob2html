@@ -11,6 +11,22 @@ BASE_URL = "https://www.skoob.com.br"
 COVERS_FOLDER = "covers/"
 
 def get_fname_url(url):
+    """
+    Extract the filename component from a given URL.
+
+    This function parses the provided URL and returns the basename
+    of its path component. It is typically used to derive a local
+    filename when downloading remote resources (e.g., book cover
+    images), ensuring the saved file keeps its original name.
+
+    Args:
+        url (str): A full URL pointing to a remote resource.
+
+    Returns:
+        str: The filename extracted from the URL path. If the URL
+        does not contain a valid path or filename, an empty string
+        may be returned.
+    """
     pfilename = urlparse(url)
     bfilename=os.path.basename(pfilename.path)
     return bfilename
