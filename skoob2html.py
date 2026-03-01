@@ -32,6 +32,31 @@ def get_fname_url(url):
     return bfilename
 
 def get_books(user_id):
+    """
+    Retrieve all books from a Skoob user's bookcase via the public API.
+
+    This function performs two HTTP requests:
+    1. An initial request to obtain pagination metadata, specifically
+       the total number of books in the user's bookcase.
+    2. A second request using that total as the limit parameter to
+       retrieve the complete list of books in a single response.
+
+    Args:
+        user_id (str): The unique identifier of the Skoob user whose
+            bookcase data should be fetched.
+
+    Returns:
+        list: A list of dictionaries representing the books returned
+        by the API under the "response" field. Each dictionary contains
+        metadata such as edition information, ranking, reading status,
+        and other related attributes.
+
+    Raises:
+        requests.RequestException: If the HTTP request fails.
+        ValueError: If the response body is not valid JSON.
+        KeyError or AttributeError: If expected JSON fields (e.g.,
+        "paging" or "response") are missing from the API response.
+    """
     api = "{}/{}/{}".format(BASE_URL, "v1/bookcase/books", user_id)
     print("Request to {}".format(api))
 
