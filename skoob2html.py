@@ -68,6 +68,35 @@ def get_books(user_id):
     return books_json
 
 def save_html(data, filename="skoob.html"):
+    """
+    Generate an HTML file containing a table representation of book data.
+
+    This function creates a simple HTML document with a bordered table,
+    where each row corresponds to a book and each column represents a
+    specific attribute (e.g., title, status, author, ranking, etc.).
+    The last column displays the book cover as an <img> tag, using the
+    locally stored filename derived from the cover URL.
+
+    Args:
+        data (list[list]): A list of book records, where each record is
+            a list containing the following fields in order:
+            [title, status, author, ranking, favorite, publisher,
+             pages, year, cover_url].
+        filename (str, optional): The name of the output HTML file.
+            Defaults to "skoob.html".
+
+    Returns:
+        None
+
+    Side Effects:
+        - Creates or overwrites the specified HTML file.
+        - References image files inside the COVERS_FOLDER directory.
+
+    Notes:
+        - The function assumes that each inner list contains exactly
+          nine elements and that the last element is a valid cover URL.
+        - No HTML escaping or validation is performed on the data.
+    """
     flag=0
     header = ["Título","Status<br>1-Lido<br>2-Quero Ler", "Autor", "Ranking", "Favorito", 
             "Editora", "Páginas", "Ano", "Capa grande"]
