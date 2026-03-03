@@ -119,6 +119,31 @@ def save_html(data, filename="skoob.html"):
     html.close()
 
 def export_data(data):
+    """
+    Transform raw Skoob API response data into a simplified list structure.
+
+    This function extracts relevant fields from the original JSON response
+    returned by the Skoob API and converts each book entry into a flat list
+    format suitable for HTML export or further processing.
+
+    For each book, it retrieves nested edition ("edicao") data and builds
+    a list with the following fields in order:
+        [title, reading_status, author, ranking, favorite,
+         publisher, pages, year, large_cover_url]
+
+    Args:
+        data (list[dict]): A list of dictionaries representing books
+            as returned by the Skoob API "response" field.
+
+    Returns:
+        list[list]: A list of simplified book records, where each inner
+        list contains selected attributes extracted from the original
+        JSON structure.
+
+    Raises:
+        KeyError: If expected keys such as 'edicao', 'titulo', 'autor',
+        or others are missing from the input data.
+    """    
     books = []
     for book in data:
         b = book['edicao']
