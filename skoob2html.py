@@ -152,6 +152,34 @@ def export_data(data):
     return books
 
 def retrieve_covers(all_books):
+    """
+    Download and store book cover images locally.
+
+    This function iterates through a list of book records and downloads
+    the cover image referenced in each entry. If the corresponding image
+    file already exists in the configured covers directory, the download
+    is skipped to avoid redundant network requests.
+
+    The filename is derived from the cover URL using `get_fname_url()`.
+
+    Args:
+        all_books (list[list]): A list of book records where each record
+            is a list containing book attributes. The cover image URL is
+            expected to be located at index 8 of each record.
+
+    Returns:
+        None
+
+    Side Effects:
+        - Sends HTTP GET requests to retrieve cover images.
+        - Writes image files to the directory specified by COVERS_FOLDER.
+
+    Notes:
+        - The function assumes that index 8 of each book entry contains
+          a valid URL to a cover image.
+        - No validation of HTTP status codes or download errors is
+          performed.
+    """
     for book in all_books:
         if not exists(COVERS_FOLDER+get_fname_url(book[8])):
             img_data = requests.get(book[8]).content
