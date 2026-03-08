@@ -187,6 +187,34 @@ def retrieve_covers(all_books):
                 handler.write(img_data)
 
 def main(user_id):
+    """
+    Execute the full Skoob bookcase export workflow for a given user.
+
+    This function orchestrates the main steps of the script:
+    1. Fetch the user's bookcase data from the Skoob API.
+    2. Transform the raw JSON response into a simplified structure.
+    3. Generate an HTML table listing the user's books.
+    4. Download the cover images referenced by those books.
+
+    Args:
+        user_id (str): The unique Skoob user identifier whose
+            bookcase will be retrieved and exported.
+
+    Returns:
+        None
+
+    Side Effects:
+        - Sends HTTP requests to the Skoob API to retrieve book data.
+        - Creates or overwrites an HTML file (default: "skoob.html")
+          containing the book list.
+        - Downloads cover images and stores them in the directory
+          defined by COVERS_FOLDER.
+
+    Notes:
+        The function assumes the helper functions `get_books`,
+        `export_data`, `save_html`, and `retrieve_covers` behave
+        correctly and that the covers directory exists.
+    """    
     json_books = (get_books(user_id))
     all_books = export_data(json_books)
     save_html(all_books)
