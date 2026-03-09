@@ -1,4 +1,47 @@
 #!/usr/bin/python3
+"""
+Export a user's Skoob bookcase to an HTML table with locally cached cover images.
+
+This script retrieves the list of books associated with a Skoob user by
+querying the Skoob public API. The returned JSON data is transformed into a
+simplified structure and exported into an HTML file containing a table of
+book information such as title, reading status, author, ranking, publisher,
+number of pages, publication year, and cover image.
+
+The script also downloads the large cover images referenced in the API
+response and stores them locally in the directory defined by COVERS_FOLDER.
+The generated HTML file references these local images so the page can be
+viewed offline.
+
+Workflow:
+    1. Query the Skoob API to determine the total number of books in the
+       user's bookcase.
+    2. Retrieve the full list of books using the API limit parameter.
+    3. Extract relevant metadata fields from the API response.
+    4. Generate an HTML file displaying the books in a table.
+    5. Download and store book cover images locally if they are not
+       already present.
+
+Usage:
+    python script.py <user_id>
+
+Arguments:
+    user_id (str): The Skoob user identifier whose bookcase will be exported.
+
+Output:
+    - An HTML file (default: "skoob.html") containing a table of books.
+    - A directory of downloaded cover images referenced by the HTML file.
+
+Notes:
+    - The script assumes the Skoob API endpoint remains stable.
+    - The directory specified by COVERS_FOLDER should exist prior to
+      execution.
+    - Minimal error handling is implemented for HTTP requests or malformed
+      API responses.
+
+Based on:
+    https://github.com/GuidoBR/skoober
+"""
 import requests
 import json
 import os
